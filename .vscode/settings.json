@@ -1,0 +1,26 @@
+{
+    "Lua.diagnostics.globals": [
+        "push",
+        "love",
+        "key",
+        "class",
+        "PIPE_HEIGHT",
+        "PIPE_WIDTH",
+        "PIPE_SPEED",
+        "pair",
+        "smallFont",
+        "mediumFont",
+        "flappyFont",
+        "hugeFont",
+        "StateMachine",
+        "TitleScreenState",
+        "PlayState",
+        "gStateMachine"
+    ],
+    "Lua.diagnostics.disable": [
+        "duplicate-set-field",
+        "inject-field",
+        "empty-block",
+        "redundant-parameter"
+    ]
+}
