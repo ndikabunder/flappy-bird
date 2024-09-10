@@ -15,7 +15,8 @@
         "StateMachine",
         "TitleScreenState",
         "PlayState",
-        "gStateMachine"
+        "gStateMachine",
+        "scrolling"
     ],
     "Lua.diagnostics.disable": [
         "duplicate-set-field",

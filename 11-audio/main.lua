@@ -33,8 +33,7 @@ push = require 'push'
 -- https://github.com/vrld/hump/blob/master/class.lua
 Class = require 'class'
 
--- a basic StateMachine class which will allow us to transition to and from
--- game states smoothly and avoid monolithic code in one file
+-- Memanggil Class untuk mempermudah transisi dalam game agar perpidahan scene dalam game menjadi halus
 require 'StateMachine'
 
 require 'states/BaseState'
@@ -47,46 +46,54 @@ require 'Bird'
 require 'Pipe'
 require 'PipePair'
 
--- physical screen dimensions
+-- Dimensi layar fisik
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
--- virtual resolution dimensions
+-- Dimensi virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
+-- Menyiapkan background ke 1 ke dalam variable
+-- Menyiapkan variable untuk kecepatan awal background ke 1
 local background = love.graphics.newImage('background.png')
 local backgroundScroll = 0
 
+-- Menyiapkan background ke 2 ke dalam variable
+--Menyiapkan variable untuk kecepatan awal background ke 2
 local ground = love.graphics.newImage('ground.png')
 local groundScroll = 0
 
+-- Menyiapkan variable untuk kecepatan background 1 dan background 2
 local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
+-- Menyiapkan variable untuk pengulanngan gambar di setiap lebar 413px
 local BACKGROUND_LOOPING_POINT = 413
 
 -- global variable we can use to scroll the map
 scrolling = true
 
 function love.load()
-    -- initialize our nearest-neighbor filter
+    -- Fungsi untuk membuat tampilan menjadi lebih tajam dalam game pixel / retro
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    -- seed the RNG
+    -- Memanggil fungsi random by time
     math.randomseed(os.time())
 
-    -- app window title
+    -- Fungsi untuk mengubah title dalam window
     love.window.setTitle('Fifty Bird')
 
-    -- initialize our nice-looking retro text fonts
+    -- Menyiapkan variable agar font sudah tersetting jenis font dan ukuran font
     smallFont = love.graphics.newFont('font.ttf', 8)
     mediumFont = love.graphics.newFont('flappy.ttf', 14)
     flappyFont = love.graphics.newFont('flappy.ttf', 28)
     hugeFont = love.graphics.newFont('flappy.ttf', 56)
+
+    --Fungsi untuk setting global font
     love.graphics.setFont(flappyFont)
 
-    -- initialize our table of sounds
+    -- Membuat object berisikan sounds yang akan digunakan
     sounds = {
         ['jump'] = love.audio.newSource('jump.wav', 'static'),
         ['explosion'] = love.audio.newSource('explosion.wav', 'static'),
@@ -97,34 +104,37 @@ function love.load()
         ['music'] = love.audio.newSource('marios_way.mp3', 'static')
     }
 
-    -- kick off music
+    -- Fungsi untuk memainkan background musik secara berulang saat game di mulai
     sounds['music']:setLooping(true)
     sounds['music']:play()
 
-    -- initialize our virtual resolution
+    -- Membuat tampilan game tetep proposional di berbagai tampilan window
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
         fullscreen = false,
         resizable = true
     })
 
-    -- initialize state machine with all state-returning functions
+    -- Menyiapkan StateMachine dalam varibale gStateMachine agar pergantina scene dapat dijalakan
     gStateMachine = StateMachine {
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
         ['score'] = function() return ScoreState() end
     }
+    -- Memanggil state title unutk menampikan title
     gStateMachine:change('title')
 
-    -- initialize input table
+    -- Menyiapkan table untuk menangkap semua proses input di keyboard
     love.keyboard.keysPressed = {}
 end
 
+-- Fungsi untuk mengaktifkan resizable window agar tampilan mengikuti window
 function love.resize(w, h)
     push:resize(w, h)
 end
 
+-- Fungsi untuk menjalakan input keyboard yang terdapat dalam table input keyboard
 function love.keypressed(key)
     -- add to our table of keys pressed this frame
     love.keyboard.keysPressed[key] = true
